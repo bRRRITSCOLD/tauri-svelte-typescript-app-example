@@ -9,20 +9,25 @@ declare module 'lodash' {
 }
 _.mixin({
   replaceOne: (replaceCriteria: AnyObject, items: AnyObject[], replacement: AnyObject): AnyObject[] => {
-    // make a copy
-    const copy = items.slice(0, items.length);
-    // find index first
-    const itemIndex = _.findIndex(copy, replaceCriteria);
-    // if found replace and 
-    // if not push on to array
-    if (itemIndex > -1) {
-      copy[itemIndex] = _.assign({}, replacement);
-    } else {
-      copy.push(_.assign({}, replacement));
+    try {
+      // make a copy
+      const copy = items.slice(0, items.length);
+      // find index first
+      const itemIndex = _.findIndex(copy, replaceCriteria);
+      // if found replace and 
+      // if not push on to array
+      if (itemIndex > -1) {
+        copy[itemIndex] = _.assign({}, replacement);
+      } else {
+        copy.push(_.assign({}, replacement));
+      }
+      // return the new array explicitly
+      return copy;
+    } catch (err) {
+      console.log('lodash.mixin.replaceOne error=', err);
+      throw err
     }
-    // return the new array explicitly
-    return copy;
   }
 });
 
-export default _;
+export { _ };

@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "scripts": {
     "build": "rollup -c",
-    "development": "rollup -c -w",
+    "dev": "rollup -c -w",
     "start": "sirv public -s",
     "validate": "svelte-check",
-    "tauri": "tauri",
-    "dev": "npm run development & npm run tauri dev"
+    "tauri": "tauri"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^14.0.0",

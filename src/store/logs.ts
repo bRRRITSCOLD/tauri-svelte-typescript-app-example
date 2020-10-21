@@ -7,7 +7,7 @@ import { get as _get, assign } from 'lodash';
 import { _ } from '../lib/utils';
 
 // models
-import type { LogAuditFileInterface, LogAuditFileLogFileInterface } from '../models';
+import type { LogAuditFile, LogAuditFileInterface, LogAuditFileLogFileInterface } from '../models';
 
 // services
 import {
@@ -16,7 +16,11 @@ import {
   logsService
 } from "../services";
 
-const initialLogsStoreState = {
+export interface LogStoreStateInterface {
+  logAuditFiles: LogAuditFile[];
+}
+
+const initialLogsStoreState: LogStoreStateInterface = {
   logAuditFiles: [],
 };
 
@@ -29,10 +33,8 @@ function createLogsStore() {
     addLogDirectory: async () => {
       // ask user for log files directory
       const logDirectory: string = await directoriesService.getDirectoryName();
-      console.log(`logDirectory=`, logDirectory);
       // read the directory
       const logDirectoryFiles = await directoriesService.readDir(logDirectory);
-      console.log(`logDirectoryFiles=`, logDirectoryFiles);
       // no filter/reduce down the results
       const logAuditFile = logDirectoryFiles.reduce((auditFile: any, file: tauriFs.FileEntry) => {
         if (_get(_get(file, 'name', '').split('.').slice(-1), '[0]', '').toUpperCase() === 'JSON') {
@@ -40,50 +42,50 @@ function createLogsStore() {
         }
         return auditFile;
       }, undefined);
-      console.log(`logAuditFile=`, logAuditFile);
       // read the audit file
       const readLogAuditFile = await filesService.readTextFile(logAuditFile.path);
       const parsedReadLogAuditFile: any = JSON.parse(readLogAuditFile);
-      console.log('parsedReadLogAuditFile=', parsedReadLogAuditFile);
       // now let us take the data from the readDir
       // operation from above and merge it with the
       // log files under each auditLogFile
       // set log audit files in store
       update(
         state => {
+          const updatedData = {
+            logAuditFiles: _.replaceOne(
+              { auditLog: parsedReadLogAuditFile.auditLog },
+              state.logAuditFiles,
+              assign(
+                {},
+                parsedReadLogAuditFile, 
+                {
+                  path: parsedReadLogAuditFile.path,
+                  directory: logDirectory,
+                  id: uuid(),
+                  logFiles: parsedReadLogAuditFile.files.map((file: LogAuditFileLogFileInterface) => {
+                    // first find the log audit file log file
+                    // that correlates to each file returned
+                    // from the above readDir call
+                    const foundReadDirFile = logDirectoryFiles.find((logDirectoryFile) => logDirectoryFile.path.includes(file.name));
+                    console.log('foundReadDirFile=', foundReadDirFile);
+                    return assign(
+                      {},
+                      file,
+                      {
+                        path: foundReadDirFile?.path
+                      }
+                    )
+                  })
+                }
+              )
+            ) 
+          };
+          console.log('updatedData=', updatedData);
           // create new state
           const newState = _.assign(
             {},
             state,
-            {
-              logAuditFiles: _.replaceOne(
-                { auditLog: logAuditFile.auditLog },
-                state.logAuditFiles,
-                assign(
-                  {},
-                  parsedReadLogAuditFile, 
-                  {
-                    path: logAuditFile.path,
-                    directory: logDirectory,
-                    id: uuid(),
-                    logFiles: parsedReadLogAuditFile.files.map((file: LogAuditFileLogFileInterface) => {
-                      // first find the log audit file log file
-                      // that correlates to each file returned
-                      // from the above readDir call
-                      const foundReadDirFile = logDirectoryFiles.find((logDirectoryFile) => logDirectoryFile.path.includes(file.name));
-                      console.log('foundReadDirFile=', foundReadDirFile);
-                      return assign(
-                        {},
-                        file,
-                        {
-                          path: foundReadDirFile?.path
-                        }
-                      )
-                    })
-                  }
-                )
-              ) 
-            }
+            updatedData
           );
           console.log('newState=', newState);
           // return new state
