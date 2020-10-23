@@ -1,22 +1,30 @@
 <script>
   // node_modules
   import Button, {Group, GroupItem, Label, Icon} from '@smui/button';
+import { assign } from 'lodash';
   import DataGrid from "svelte-data-grid";
   import { navigate } from "svelte-routing";
+  import { watchResize } from "svelte-watch-resize";
 
   // stores
   import { logsStore } from '../store/logs';
 
+  let dataGridWidth = 0;
+
+  function handleDataGridResize(node) {
+    dataGridWidth = node.clientWidth;
+  }
+
   // file constants
   let pageName="Home Page";
-  let myColumnDefinitions = [
+  let myColumnDefinitions = [];
+  $: myColumnDefinitions = [
     {
       display: 'Directory',  // What will be displayed as the column header
       dataName: 'directory',  // The key of a row to get the column's data from
-      width: 900,             // Width, in pixels, of column
+      width: dataGridWidth,             // Width, in pixels, of column
       disallowResize: true    // Optional - disables resizing this column
-    }
-  ];
+    }];
 
   // handlers
   async function onClick () {
@@ -32,8 +40,8 @@
     <div class="text-align-center">
       <Button on:click={onClick} variant="unelevated" class="button-shaped-round"><Label>Add Directory</Label></Button>
     </div>
-    <div class="grid-wrap">
-      <DataGrid 
+    <div class="grid-wrap" use:watchResize={handleDataGridResize}>
+      <DataGrid
         rows={$logsStore.logAuditFiles} 
         columns={myColumnDefinitions}
       />
