@@ -1,0 +1,1 @@
+export const LOGS_STORE_KEY = 'LOGS_STORE_KEY';
