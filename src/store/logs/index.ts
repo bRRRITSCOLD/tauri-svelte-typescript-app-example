@@ -47,7 +47,7 @@ function createLogsStore() {
   return {
     update,
     subscribe,
-    // reset: set(initialLogsStoreState),
+    reset: () => set(initialLogsStoreState),
     addLogDirectory: async () => {
       // ask user for log files directory
       const logDirectory: string = await directoriesService.getDirectoryName();
