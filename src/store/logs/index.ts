@@ -22,19 +22,32 @@ import {
 import { initialLogsStoreState } from "./state";
 import { LOGS_STORE_KEY } from "./keys";
 
+
+// get persisted item
+const storedLogsStore = JSON.parse(sessionStorage.getItem(LOGS_STORE_KEY));
+console.log('storedLogsStore=', storedLogsStore);
+// create writable
+const { subscribe, update, set } = writable(assign({}, initialLogsStoreState, _.isObject(storedLogsStore) ? storedLogsStore : {}));
+subscribe(value => {
+  console.log('logStoreSubscribe=', value);
+  sessionStorage.setItem(LOGS_STORE_KEY, JSON.stringify(value));
+});
+
 function createLogsStore() {
-  // get persisted item
-  const storedLogsStore = JSON.parse(sessionStorage.getItem(LOGS_STORE_KEY));
-  // create writable
-  const { subscribe, update, set } = writable(assign({}, initialLogsStoreState, _.isObject(storedLogsStore) ? storedLogsStore : {}));
-  subscribe(value => {
-      sessionStorage.setItem(LOGS_STORE_KEY, JSON.stringify(value));
-  });
+  // // get persisted item
+  // const storedLogsStore = JSON.parse(sessionStorage.getItem(LOGS_STORE_KEY));
+  // console.log('storedLogsStore=', storedLogsStore);
+  // // create writable
+  // const { subscribe, update, set } = writable(assign({}, initialLogsStoreState, _.isObject(storedLogsStore) ? storedLogsStore : {}));
+  // subscribe(value => {
+  //   console.log('logStoreSubscribe=', value);
+  //   sessionStorage.setItem(LOGS_STORE_KEY, JSON.stringify(value));
+  // });
 
   return {
     update,
     subscribe,
-    reset: set(initialLogsStoreState),
+    // reset: set(initialLogsStoreState),
     addLogDirectory: async () => {
       // ask user for log files directory
       const logDirectory: string = await directoriesService.getDirectoryName();
@@ -101,7 +114,9 @@ function createLogsStore() {
   };
 }
 
-export const logsStore = createLogsStore();
+const logsStore = createLogsStore();
+
+export { logsStore };
 
 // /* computed values */
 // export const getTotalHeroes = derived(

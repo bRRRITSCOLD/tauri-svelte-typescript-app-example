@@ -7,7 +7,7 @@ import { assign } from 'lodash';
   import { watchResize } from "svelte-watch-resize";
 
   // stores
-  import { logsStore } from '../store/logs';
+  import { logsStore } from '../store/logs'
 
   let dataGridWidth = 0;
 
