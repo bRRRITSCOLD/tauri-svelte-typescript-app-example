@@ -1,10 +1,10 @@
 <script>
   // node_modules
   import Button, {Group, GroupItem, Label, Icon} from '@smui/button';
-import { assign } from 'lodash';
+  import { assign } from 'lodash';
   import DataGrid from "svelte-data-grid";
-  import { navigate } from "svelte-routing";
   import { watchResize } from "svelte-watch-resize";
+import LogsCell from '../components/LogsCell.svelte';
 
   // stores
   import { logsStore } from '../store/logs'
@@ -23,7 +23,8 @@ import { assign } from 'lodash';
       display: 'Directory',  // What will be displayed as the column header
       dataName: 'directory',  // The key of a row to get the column's data from
       width: dataGridWidth,             // Width, in pixels, of column
-      disallowResize: true    // Optional - disables resizing this column
+      disallowResize: true,    // Optional - disables resizing this column
+      cellComponent: LogsCell
     }];
 
   // handlers
@@ -44,6 +45,7 @@ import { assign } from 'lodash';
       <DataGrid
         rows={$logsStore.logAuditFiles} 
         columns={myColumnDefinitions}
+        rowHeight={50}
       />
     </div>
   </div>

@@ -2,6 +2,7 @@
   import { Router, Route, Link } from "svelte-routing";
   import Home from "./pages/Home.svelte";
   import About from "./pages/About.svelte";
+  import LogsDetail from "./pages/LogsDetail.svelte";
   export let url = ""; //This property is necessary declare to avoid ignore the Router
 </script>
 
@@ -12,6 +13,7 @@
    </nav>
    <div>
      <Route path="about" component="{About}" /> 
+     <Route path="logs/:id" component="{LogsDetail}" /> 
      <!--for now the router just support case sensitive,
          one workaround colud be add two time the route
          Example.

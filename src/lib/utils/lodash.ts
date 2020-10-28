@@ -7,6 +7,7 @@ declare module 'lodash' {
     replaceOne<T>(replaceCriteria: AnyObject, items: T[], replacement: T): T[];
   }
 }
+
 _.mixin({
   replaceOne: (replaceCriteria: AnyObject, items: AnyObject[], replacement: AnyObject): AnyObject[] => {
     try {
