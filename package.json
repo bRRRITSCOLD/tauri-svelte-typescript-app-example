@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@smui/button": "^1.0.0",
+    "namey-mcnameface": "^1.0.3",
     "sirv-cli": "^1.0.0",
     "svelte-routing": "^1.4.2",
     "svelte-watch-resize": "^1.0.3",

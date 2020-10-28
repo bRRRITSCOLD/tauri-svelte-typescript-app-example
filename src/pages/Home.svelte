@@ -3,8 +3,12 @@
   import Button, {Group, GroupItem, Label, Icon} from '@smui/button';
   import { assign } from 'lodash';
   import DataGrid from "svelte-data-grid";
-  import { watchResize } from "svelte-watch-resize";
-import LogsCell from '../components/LogsCell.svelte';
+  // import { watchResize } from "svelte-watch-resize";
+  import LogsCell from '../components/LogsCell.svelte';
+
+	import VirtualList from '../components/VirtualList.svelte';
+	import items from './data.js';
+	// import ListItem from './ListItem.svelte';
 
   // stores
   import { logsStore } from '../store/logs'
@@ -32,6 +36,14 @@ import LogsCell from '../components/LogsCell.svelte';
     await logsStore.addLogDirectory();
     // navigate("/about", { replace: true });
   }
+
+
+	let searchTerm = "";
+	
+	$: filteredList = items.filter(item => item.name.indexOf(searchTerm) !== -1);
+	
+  let start;
+  let end;
 </script>
 
 <main>
@@ -41,15 +53,25 @@ import LogsCell from '../components/LogsCell.svelte';
     <div class="text-align-center">
       <Button on:click={onClick} variant="unelevated" class="button-shaped-round"><Label>Add Directory</Label></Button>
     </div>
-    <div class="grid-wrap" use:watchResize={handleDataGridResize}>
+    <!-- <div class="grid-wrap" use:watchResize={handleDataGridResize}>
       <DataGrid
         rows={$logsStore.logAuditFiles} 
         columns={myColumnDefinitions}
         rowHeight={50}
       />
+    </div> -->
+    Filter: <input bind:value={searchTerm} />
+    {searchTerm}
+    
+    <div class='container'>
+      <VirtualList items={filteredList} bind:start bind:end let:item>
+        <div>item</div>
+      </VirtualList>
+      <p>showing items {start}-{end}</p>
     </div>
   </div>
 </main>
+
 
 <style>
 
@@ -60,6 +82,12 @@ import LogsCell from '../components/LogsCell.svelte';
 	border: 1px solid black;
 }
 
+.container {
+		border-top: 1px solid #333;
+		border-bottom: 1px solid #333;
+		min-height: 200px;
+		height: calc(100vh - 15em);
+	}
   h1 {
       color: #ff3e00;
       text-transform: uppercase;
