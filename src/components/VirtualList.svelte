@@ -160,11 +160,17 @@
 	<svelte-virtual-list-contents
 		bind:this={contents}
 		style="padding-top: {top}px; padding-bottom: {bottom}px;"
-	>
-		{#each visible as row (row.index)}
-			<svelte-virtual-list-row>
-				<slot item={row.data}>Missing template</slot>
-			</svelte-virtual-list-row>
-		{/each}
+  >
+  <div class="mdc-data-table">
+    <div class="mdc-data-table__table-container">
+      <table class="mdc-data-table__table" aria-label="Dessert calories">
+        {#each visible as row (row.index)}
+          <svelte-virtual-list-row>
+            <slot item={row.data}>Missing template</slot>
+          </svelte-virtual-list-row>
+        {/each}
+      </table>
+    </div>
+  </div>
 	</svelte-virtual-list-contents>
 </svelte-virtual-list-viewport>
