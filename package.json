@@ -33,8 +33,7 @@
   },
   "dependencies": {
     "@smui/button": "^1.0.0",
-    "@smui/data-table": "^1.0.0",
-    "material-components-web": "^7.0.0",
+    "faker": "^5.1.0",
     "namey-mcnameface": "^1.0.3",
     "sirv-cli": "^1.0.0",
     "svelte-routing": "^1.4.2",
