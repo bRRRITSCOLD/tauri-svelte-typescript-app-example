@@ -5,7 +5,7 @@
   import LogsCell from '../components/LogsCell.svelte';
   import Cell from '../components/Cell.svelte';
 
-	import VirtualTable from '../components/VirtualTable.svelte';
+	import VirtualTable from '../components/UI/Table/VirtualTable.svelte';
 
   // stores
   import { logsStore } from '../store/logs'
@@ -25,7 +25,10 @@
       dataName: 'directory',  // The key of a row to get the column's data from
       width: dataGridWidth,
       cellComponent: LogsCell,
-      headerComponent: Cell
+      headerComponent: Cell,
+      onCellClick(event) {
+        console.log('lol')
+      }
     }];
 
   // handlers
@@ -44,8 +47,13 @@
     </div>
     <div class='container' use:watchResize={handleDataGridResize}>
       <VirtualTable
-        rows={$logsStore.logAuditFiles} 
+        rows={Array.from({ length: 100 }).map(() => ({
+          directory: 'HELLO WORLD!'
+        }))} 
         columns={myColumnDefinitions}
+        on:cellClick={() => {
+          console.log('cellClick');
+        }}
       />
     </div>
   </div>
@@ -62,8 +70,8 @@
 }
 
 .container {
-		border-top: 1px solid #333;
-		border-bottom: 1px solid #333;
+		/* border-top: 1px solid #333;
+		border-bottom: 1px solid #333; */
 		min-height: 200px;
 		height: calc(100vh - 15em);
 	}

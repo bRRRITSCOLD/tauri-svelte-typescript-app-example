@@ -1,7 +1,10 @@
-<script>
+<script lang="ts">
+  // noce_modules
+  import { createEventDispatcher } from "svelte";
+  const dispatch = createEventDispatcher();
 
   // props
-  export let rows = []; // Rows to display
+  export let rows: any[] = []; // Rows to display
   export let columns = []; // Array of column definitions: { display: '', dataName: ''}, where display is what the display value is and dataName is what the key on the row object is
   export let rowHeight = 24; // Row height in pixels
   
@@ -43,7 +46,6 @@
     return left;
   }
 
-
   function onScroll() {
     // get new scroll values from the scroll area
     const { scrollTop: newScrollTop, scrollLeft: newScrollLeft } = tableSpace;
@@ -70,6 +72,7 @@
     // if width was not provided for this column, give it a default value
     columnWidths = columns.map(x => x.width || MIN_COLUMN_SIZE);
   }
+
   /**
    * The number of rows we have
    */
@@ -77,6 +80,7 @@
   $: {
     numRows = rows.length;
   }
+
   /**
    * Width of the overall grid space
    */
@@ -108,7 +112,7 @@
     numRowsInViewport = Math.ceil(__innerOffsetHeight / rowHeight);
   }
 
-  let visibleRows;
+  let visibleRows: any[];
   $: {
     const start = Math.max(
       0,
@@ -148,7 +152,7 @@
     width: 100%;
     top: 0;
     left: 0;
-    border-bottom: 2px solid black;
+    /* border-bottom: 2px solid black; */
   }
 
   .virtual-table-header-row {
@@ -179,16 +183,16 @@
     top: 0;
     left: 0;
     background: transparent;
-    pointer-events: none;
+    /* pointer-events: none; */
     z-index: 3;
   }
   .virtual-table-row:not(:last-child) {
-    border-bottom: 1px solid #666;
+    /* border-bottom: 1px solid #666; */
   }
 </style>
 
 <div
-  class="virtual-table-wrapper"
+  class="virtual-table-wrapper mdc-data-table"
   style="padding-top: {rowHeight}px;"
   bind:this={wrapper}
 >
@@ -197,12 +201,12 @@
     style="height: {rowHeight}px;"
   >
     <div
-      class="virtual-table-header-row"
+      class="virtual-table-header-row mdc-data-table__header-row"
       style="left: -{__scrollLeft}px; height: {rowHeight}px; width: {gridSpaceWidth}px;"
     >
       {#each columns as column, i (i)}
         <div
-          class="virtual-table-cell"
+          class="virtual-table-cell mdc-data-table__header-cell"
           style="z-index: {
             getCellZIndex(__affixedColumnIndices, i)
           }; left: {
@@ -234,31 +238,37 @@
     style="height: 100%;"
   >
     <div
-      class="virtual-table-body-contents"
+      class="virtual-table-body-contents mdc-data-table__content"
       style="width: {gridSpaceWidth}px; height: {gridSpaceHeight}px;"
     >
     {#each visibleRows as row, i}
       <div
-        class="virtual-table-row"
+        class="virtual-table-row mdc-data-table__row"
         style="top: {getRowTop(row.i, rowHeight)}px; height: {rowHeight}px;
         width: {gridSpaceWidth}px;"
         role="row"
         aria-rowindex={row.i}>
         {#each columns as column, j}
           <div
-            class="virtual-table-cell"
+            class="virtual-table-cell mdc-data-table__cell"
             style="z-index: {getCellZIndex(__affixedColumnIndices, j)}; left: {getCellLeft(
               { i: j, columnWidths, __affixedColumnIndices, __scrollLeft }
-            )}px; height: {rowHeight}px; line-height: {rowHeight}px; width: {columnWidths[j]}px;"
+            )}px; height: {rowHeight}px; line-height: {rowHeight}px; width: {columnWidths[j]}px; padding-left: 0px; padding-right: 0px;"
             role="cell">
             {#if column.cellComponent}
+            <div
+              on:click={(event) => {
+                dispatch("cellClick", {
+                  rowNumber: row.i
+                });
+              }}
+            >
               <svelte:component
                 this={column.cellComponent}
-                rowNumber={row.i}
-                on:click={column.onCellClick}
                 {column}
                 {row}
               />
+            </div>
             {:else}
               <div class="cell-default">{row.data[column.dataName] || ''}</div>
             {/if}
