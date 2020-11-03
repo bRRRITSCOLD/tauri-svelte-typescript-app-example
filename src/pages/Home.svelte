@@ -1,19 +1,27 @@
 <script>
   // node_modules
+  import { navigate } from "svelte-routing";
   import Button, {Group, GroupItem, Label, Icon} from '@smui/button';
   import { watchResize } from "svelte-watch-resize";
-  import LogsCell from '../components/LogsCell.svelte';
-  import Cell from '../components/Cell.svelte';
 
+  // libraries
+
+  // models
+
+  // components
+  import LogDirectoriesRowCell from '../components/LogDirectories/LogDirectoriesRowCell.svelte';
+  import LogDirectoriesHeaderCell from '../components/LogDirectories/LogsDirectoriesHeaderCell.svelte';
 	import VirtualTable from '../components/UI/Table/VirtualTable.svelte';
 
   // stores
   import { logsStore } from '../store/logs'
 
-  let dataGridWidth = 0;
+  let virtualTableWidth = 0;
+  let virtualTableHeight = 0;
 
   function handleDataGridResize(node) {
-    dataGridWidth = node.clientWidth;
+    virtualTableWidth = node.clientWidth;
+    virtualTableHeight = node.clientHeight;
   }
 
   // file constants
@@ -23,11 +31,12 @@
     {
       display: 'Directory',  // What will be displayed as the column header
       dataName: 'directory',  // The key of a row to get the column's data from
-      width: dataGridWidth,
-      cellComponent: LogsCell,
-      headerComponent: Cell,
+      width: virtualTableWidth,
+      cellComponent: LogDirectoriesRowCell,
+      headerComponent: LogDirectoriesHeaderCell,
       onCellClick(event) {
         console.log('lol')
+        console.log(event)
       }
     }];
 
@@ -40,19 +49,38 @@
 
 <main>
   <div class="flex-box-column">
-    <h1 class="text-align-center"> {pageName}!</h1>
-    <p class="text-align-center">Welcome this is my <b>{pageName}</b></p>
-    <div class="text-align-center">
+    <div class="text-align-right">
       <Button on:click={onClick} variant="unelevated" class="button-shaped-round"><Label>Add Directory</Label></Button>
     </div>
-    <div class='container' use:watchResize={handleDataGridResize}>
-      <VirtualTable
-        rows={Array.from({ length: 100 }).map(() => ({
-          directory: 'HELLO WORLD!'
+    <div
+      class='container'
+      style="height: calc(100vh - 15em); min-height: 200px;"
+      use:watchResize={handleDataGridResize}
+    >
+      <!-- <VirtualTable
+        rows={Array.from({ length: 10000 }).map((__, index) => ({
+          directory: `HELLO WORLD! ${index}`
         }))} 
         columns={myColumnDefinitions}
         on:cellClick={() => {
           console.log('cellClick');
+        }}
+        on:cellDoubleClick={() => {
+          console.log('cellDoubleClick');
+        }}
+        on:cellTouchStart={() => {
+          console.log('cellTouchStart');
+        }}
+      /> -->
+      <VirtualTable
+        rows={$logsStore.logAuditFiles} 
+        columns={myColumnDefinitions}
+        on:cellClick={() => {
+          navigate("/success", { replace: true });
+          console.log('cellClick');
+        }}
+        on:cellDoubleClick={() => {
+          console.log('cellDoubleClick');
         }}
       />
     </div>
@@ -60,25 +88,4 @@
 </main>
 
 
-<style>
-
-.grid-wrap {
-	width: 70%;
-	margin: 0 auto;
-	Height: calc(100vh - 300px);
-	border: 1px solid black;
-}
-
-.container {
-		/* border-top: 1px solid #333;
-		border-bottom: 1px solid #333; */
-		min-height: 200px;
-		height: calc(100vh - 15em);
-	}
-  h1 {
-      color: #ff3e00;
-      text-transform: uppercase;
-      font-size: 4em;
-      font-weight: 100;
-  }
-</style>
+<style></style>

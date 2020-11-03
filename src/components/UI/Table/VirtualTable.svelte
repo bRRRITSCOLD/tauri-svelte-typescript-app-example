@@ -262,6 +262,12 @@
                   rowNumber: row.i
                 });
               }}
+              on:dblclick={(event) => {
+                dispatch('cellDoubleClick');
+              }}
+              on:touchstart={(event) => {
+                dispatch('cellTouchStart');
+              }}
             >
               <svelte:component
                 this={column.cellComponent}
