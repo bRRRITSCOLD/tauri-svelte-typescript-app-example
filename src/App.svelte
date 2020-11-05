@@ -1,27 +1,26 @@
 <script>
-  // node_modules
-  import { Router, Route, Link } from "svelte-routing";
+import { onMount } from 'svelte';
 
-  // pages
-  import Home from "./pages/Logs.svelte";
-  import LogSearch from "./pages/LogSearch.svelte";
-  import LogDetail from "./pages/LogDetail.svelte";
+  // node_modules
+  import Router, { location, push } from 'svelte-spa-router';
 
   // components
   import NavigationBar from "./components/UI/Navigation/NavBar.svelte";
 
+  // routes
+  import routes from './routes';
+
   // props
-  export let url = ""; //This property is necessary declare to avoid ignore the Router
+
+  onMount(() => {
+    if ($location === '/') {
+      push('/logs');
+    }
+  })
 </script>
 
-<Router url="{url}">
-  <NavigationBar />
-   <div>
-     <Route path="/:logId/search" component="{LogSearch}" /> 
-     <Route path="/:logId/details" component="{LogDetail}" /> 
-     <Route path="/"><Home /></Route>
-   </div>
-</Router>
+<NavigationBar />
+<Router {routes}/>
 
 <style>
   :global(.flex-box-column) {

@@ -36,7 +36,7 @@
     "faker": "^5.1.0",
     "namey-mcnameface": "^1.0.3",
     "sirv-cli": "^1.0.0",
-    "svelte-routing": "^1.4.2",
+    "svelte-spa-router": "^3.0.5",
     "svelte-watch-resize": "^1.0.3",
     "tauri": "^0.12.0"
   }

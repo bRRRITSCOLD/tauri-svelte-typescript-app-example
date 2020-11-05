@@ -1,17 +1,16 @@
 <script lang="ts">
-import { uniq } from "lodash";
-
-import { routerStore } from "../../../store/router";
+  // node_modules
+  import { uniq } from "lodash";
+  import { link, location, querystring } from 'svelte-spa-router'
 
   // components
-  import NavLink from "./NavLink.svelte";
 
-  // event handlers
-  function onCurrentLocationChange(event: any) {
-    routerStore.setPreviousRoute($routerStore.currentRoute);
-    routerStore.setCurrentRoute(event.detail.pathname);
-    console.log(`onCurrentLocationChange=`, $routerStore.currentRoute);
-  }
+  // reactive vars/consts
+  let splitLocation;
+  $: splitLocation = $location.split('/');
+
+  // props
+  export let params: any = {};
 </script>
 
 <style>
@@ -20,37 +19,28 @@ import { routerStore } from "../../../store/router";
 
 
 <nav class="flex-box-row">
-  {#each uniq($routerStore.currentRoute.split('/')) as urlPart, urlParIndex}
-    {#if urlPart === ''}
-      <div  on:click={() => {
-        routerStore.navigate('')  
-      }}>
-        <NavLink>Logs</NavLink>
-      </div>
-      {#if uniq($routerStore.currentRoute.split('/')).length > 1}<div style="padding-left: 10px; padding-right: 10px;">/</div>{/if}
-    {:else if urlPart === 'details'}
-      {#if $routerStore.currentRoute.split('/').slice(-1)[0] === 'details'}
-      <div on:click={() => {  
-      }}>
-        <NavLink>Details</NavLink>
-      </div>
+  {#each splitLocation as urlPart, urlParIndex}
+    {#if urlPart === 'logs'}
+      {#if urlParIndex + 1 === splitLocation.length}
+        <a style="text-decoration: none; pointer-events: none; color: gray;">Logs</a>
       {:else}
-        <div on:click={() => {
-          console.log('NavBar.onClick=')
-          routerStore.navigate('details')  
-        }}>
-          <NavLink>Details</NavLink>
-        </div>
+        <a use:link="{`/logs${urlParIndex + 1 !== splitLocation.length && $querystring ? `?${$querystring}` : ''}`}">Logs</a>
       {/if}
-      {#if uniq($routerStore.currentRoute.split('/')).length > 1}<div style="padding-left: 10px; padding-right: 10px;">/</div>{/if}
+      {#if urlParIndex + 1 !== splitLocation.length}<div style="padding-left: 10px; padding-right: 10px;">/</div>{/if}
+    {:else if urlPart === 'details'}
+      {#if urlParIndex + 1 === splitLocation.length}
+        <a style="text-decoration: none; pointer-events: none; color: gray;">Details</a>
+      {:else}
+        <a use:link="{`/logs/${params.logId}/details${urlParIndex + 1 !== splitLocation.length && $querystring ? `?${$querystring}` : '' }`}">Details</a>
+      {/if}
+      {#if urlParIndex + 1 !== splitLocation.length}<div style="padding-left: 10px; padding-right: 10px;">/</div>{/if}
     {:else if urlPart === 'search'}
-      <div  on:click={() => {
-        console.log('NavBar.onClick=')
-        routerStore.navigate('search')  
-      }}>
-        <NavLink>Search</NavLink>
-      </div>
-      {#if uniq($routerStore.currentRoute.split('/')).length > 1}<div style="padding-left: 10px; padding-right: 10px;">/</div>{/if}
+      {#if urlParIndex + 1 === splitLocation.length}
+        <a style="text-decoration: none; pointer-events: none; color: gray;">Search</a>
+      {:else}
+        <a use:link="{`/logs/${params.logId}/search${urlParIndex + 1 !== splitLocation.length && $querystring ? `?${$querystring}` : '' }`}">Search</a>
+      {/if}
+      {#if urlParIndex + 1 !== splitLocation.length}<div style="padding-left: 10px; padding-right: 10px;">/</div>{/if}
     {/if}
   {/each}
 </nav>

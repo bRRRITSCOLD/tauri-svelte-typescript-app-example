@@ -5,7 +5,7 @@
 
 <button
   class="mdc-button"
-  style="width: 100%; padding-bottom: 10px;"
+  style="width: 100%; padding-bottom: 10px; font-size: 10px;"
 >
   <div
     class="mdc-button__ripple"

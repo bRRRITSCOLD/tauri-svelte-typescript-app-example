@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let logId: string = '';
+  export let params: any = {};
   let pageName="Success Page";
 </script>
 <!-- { id: 'selected', label: 'Selected', minWidth: 170, align: 'center' },

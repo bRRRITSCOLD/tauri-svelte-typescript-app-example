@@ -1,6 +1,6 @@
-<script>
+<script lang="ts">
   // node_modules
-  import { navigate } from "svelte-routing";
+  import { push } from 'svelte-spa-router'
   import Button, {Group, GroupItem, Label, Icon} from '@smui/button';
   import { watchResize } from "svelte-watch-resize";
 
@@ -15,20 +15,12 @@
 
   // stores
   import { logsStore } from '../store/logs'
-  import { routerStore } from "../store/router";
-
-  let virtualTableWidth = 0;
-  let virtualTableHeight = 0;
-
-  function handleDataGridResize(node) {
-    virtualTableWidth = node.clientWidth;
-    virtualTableHeight = node.clientHeight;
-  }
 
   // file constants
-  let pageName="Home Page";
-  let myColumnDefinitions = [];
-  $: myColumnDefinitions = [
+  let virtualTableWidth = 0;
+
+  let virtualTableColumns = [];
+  $: virtualTableColumns = [
     {
       display: 'Directory',  // What will be displayed as the column header
       dataName: 'directory',  // The key of a row to get the column's data from
@@ -36,33 +28,33 @@
       cellComponent: LogDirectoriesRowCell,
       headerComponent: LogDirectoriesHeaderCell,
       onCellClick(event) {
-        console.log('lol')
         console.log(event)
       }
     }];
 
-  // handlers
-  async function onClick () {
-    await logsStore.addLogDirectory();
-    // navigate("/about", { replace: true });
-  }
+  // props
+  export let params: any = {};
 </script>
 
 <main>
   <div class="flex-box-column">
     <div class="text-align-right">
-      <Button on:click={onClick} variant="unelevated" class="button-shaped-round"><Label>Add Directory</Label></Button>
+      <Button on:click={async () => {
+        await logsStore.addLogDirectory();
+      }} variant="unelevated" class="button-shaped-round"><Label>Add Directory</Label></Button>
     </div>
     <div
       class='container'
       style="height: calc(100vh - 15em); min-height: 200px;"
-      use:watchResize={handleDataGridResize}
+      use:watchResize={(node) => {
+        virtualTableWidth = node.clientWidth;
+      }}
     >
       <VirtualTable
         rows={$logsStore.logAuditFiles} 
-        columns={myColumnDefinitions}
+        columns={virtualTableColumns}
         on:cellClick={() => {
-          routerStore.navigate('/sdfbhsbf-asdfiasb-ashdfbhjas/details');
+          push('/logs/sdfbhsbf-asdfiasb-ashdfbhjas/details');
         }}
         on:cellDoubleClick={() => {
           console.log('cellDoubleClick');
