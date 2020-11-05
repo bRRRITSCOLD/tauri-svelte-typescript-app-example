@@ -1,0 +1,1 @@
+export const ROUTER_STORE_KEY = 'ROUTER_STORE_KEY';

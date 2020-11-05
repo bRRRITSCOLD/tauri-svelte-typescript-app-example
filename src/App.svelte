@@ -1,22 +1,24 @@
 <script>
+  // node_modules
   import { Router, Route, Link } from "svelte-routing";
-  import Home from "./pages/Home.svelte";
-  import About from "./pages/About.svelte";
-  import LogsDetail from "./pages/LogsDetail.svelte";
+
+  // pages
+  import Home from "./pages/Logs.svelte";
+  import LogSearch from "./pages/LogSearch.svelte";
+  import LogDetail from "./pages/LogDetail.svelte";
+
+  // components
   import NavigationBar from "./components/UI/Navigation/NavBar.svelte";
+
+  // props
   export let url = ""; //This property is necessary declare to avoid ignore the Router
 </script>
 
 <Router url="{url}">
   <NavigationBar />
    <div>
-     <Route path="about" component="{About}" /> 
-     <Route path="logs/:id" component="{LogsDetail}" /> 
-     <!--for now the router just support case sensitive,
-         one workaround colud be add two time the route
-         Example.
-        <Route path="About" component="{About}" /> 
-     -->
+     <Route path="/:logId/search" component="{LogSearch}" /> 
+     <Route path="/:logId/details" component="{LogDetail}" /> 
      <Route path="/"><Home /></Route>
    </div>
 </Router>
@@ -43,7 +45,6 @@
   :global(.text-align-right) {
     text-align: right;
   }
-
 
   :global(.text-align-left) {
     text-align: left;

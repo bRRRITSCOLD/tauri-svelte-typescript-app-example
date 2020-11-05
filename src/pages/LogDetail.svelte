@@ -1,5 +1,6 @@
-<script>
-  let pageName="Logs Detail Page";
+<script lang="ts">
+  export let logId: string = '';
+  let pageName="Success Page";
 </script>
 <!-- { id: 'selected', label: 'Selected', minWidth: 170, align: 'center' },
 { id: 'name', label: 'Name', minWidth: 170, align: 'center', format: (value: string) => value.split('/').slice(-1)[0] },

@@ -9,12 +9,13 @@
   // models
 
   // components
-  import LogDirectoriesRowCell from '../components/LogDirectories/LogDirectoriesRowCell.svelte';
-  import LogDirectoriesHeaderCell from '../components/LogDirectories/LogsDirectoriesHeaderCell.svelte';
+  import LogDirectoriesRowCell from '../components/LogDirectories/LogDirectoriesTableRowCell.svelte';
+  import LogDirectoriesHeaderCell from '../components/LogDirectories/LogsDirectoriesTableHeaderCell.svelte';
 	import VirtualTable from '../components/UI/Table/VirtualTable.svelte';
 
   // stores
   import { logsStore } from '../store/logs'
+  import { routerStore } from "../store/router";
 
   let virtualTableWidth = 0;
   let virtualTableHeight = 0;
@@ -57,27 +58,11 @@
       style="height: calc(100vh - 15em); min-height: 200px;"
       use:watchResize={handleDataGridResize}
     >
-      <!-- <VirtualTable
-        rows={Array.from({ length: 10000 }).map((__, index) => ({
-          directory: `HELLO WORLD! ${index}`
-        }))} 
-        columns={myColumnDefinitions}
-        on:cellClick={() => {
-          console.log('cellClick');
-        }}
-        on:cellDoubleClick={() => {
-          console.log('cellDoubleClick');
-        }}
-        on:cellTouchStart={() => {
-          console.log('cellTouchStart');
-        }}
-      /> -->
       <VirtualTable
         rows={$logsStore.logAuditFiles} 
         columns={myColumnDefinitions}
         on:cellClick={() => {
-          navigate("/success", { replace: true });
-          console.log('cellClick');
+          routerStore.navigate('/sdfbhsbf-asdfiasb-ashdfbhjas/details');
         }}
         on:cellDoubleClick={() => {
           console.log('cellDoubleClick');
