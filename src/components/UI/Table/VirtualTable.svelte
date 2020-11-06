@@ -1,6 +1,7 @@
 <script lang="ts">
   // noce_modules
-  import { createEventDispatcher } from "svelte";
+  import type { join } from "lodash";
+import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
 
   // props
@@ -256,25 +257,24 @@
             )}px; height: {rowHeight}px; line-height: {rowHeight}px; width: {columnWidths[j]}px; padding-left: 0px; padding-right: 0px;"
             role="cell">
             {#if column.cellComponent}
-            <div
-              on:click={(event) => {
-                dispatch("cellClick", {
-                  rowNumber: row.i
-                });
-              }}
-              on:dblclick={(event) => {
-                dispatch('cellDoubleClick');
-              }}
-              on:touchstart={(event) => {
-                dispatch('cellTouchStart');
-              }}
-            >
-              <svelte:component
-                this={column.cellComponent}
-                {column}
-                {row}
-              />
-            </div>
+              <div
+                on:click={(event) => {
+                  column.onCellClick({
+                    rowIndex: i
+                  });
+                }}
+                on:dblclick={(event) => {
+                  column.onCellDoubleClick({
+                    rowIndex: i
+                  });
+                }}
+              >
+                <svelte:component
+                  this={column.cellComponent}
+                  {column}
+                  {row}
+                />
+              </div>
             {:else}
               <div class="cell-default">{row.data[column.dataName] || ''}</div>
             {/if}

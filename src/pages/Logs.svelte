@@ -28,10 +28,17 @@
       cellComponent: LogDirectoriesRowCell,
       headerComponent: LogDirectoriesHeaderCell,
       onCellClick(event) {
-        console.log(event)
+        // find the log audit file clicked on
+        const clickedLogAudigFile = $logsStore.logAuditFiles[event.rowIndex];
+        // route to correct details page
+        push(`/logs/${clickedLogAudigFile.id}/details`);
+      },
+      onCellDoubleClick(event) {
+        console.log(event.rowIndex);
       }
-    }];
-
+    }
+  ];
+  console.log($logsStore);
   // props
   export let params: any = {};
 </script>
@@ -53,12 +60,6 @@
       <VirtualTable
         rows={$logsStore.logAuditFiles} 
         columns={virtualTableColumns}
-        on:cellClick={() => {
-          push('/logs/sdfbhsbf-asdfiasb-ashdfbhjas/details');
-        }}
-        on:cellDoubleClick={() => {
-          console.log('cellDoubleClick');
-        }}
       />
     </div>
   </div>

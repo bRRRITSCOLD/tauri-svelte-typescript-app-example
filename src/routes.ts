@@ -1,6 +1,6 @@
 // Components
 import Logs from './pages/Logs.svelte'
-import LogDetail from './pages/LogDetail.svelte'
+import LogDetail from './pages/LogDetails.svelte'
 import LogSearch from './pages/LogSearch.svelte'
 
 // Export the route definition object
@@ -9,6 +9,6 @@ export default {
     '/logs': Logs,
 
     // Using named parameter
-    '/logs/:logId/details': LogDetail,
-    '/logs/:logId/search': LogSearch
+    '/logs/:logAuditFileId/details': LogDetail,
+    '/logs/:logAuditFileId/search': LogSearch
 }
