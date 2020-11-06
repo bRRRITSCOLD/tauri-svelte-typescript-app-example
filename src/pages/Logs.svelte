@@ -30,15 +30,12 @@
       onCellClick(event) {
         // find the log audit file clicked on
         const clickedLogAudigFile = $logsStore.logAuditFiles[event.rowIndex];
+        console.log(clickedLogAudigFile)
         // route to correct details page
         push(`/logs/${clickedLogAudigFile.id}/details`);
-      },
-      onCellDoubleClick(event) {
-        console.log(event.rowIndex);
       }
     }
   ];
-  console.log($logsStore);
   // props
   export let params: any = {};
 </script>

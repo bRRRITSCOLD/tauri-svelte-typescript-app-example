@@ -23,6 +23,16 @@ import { onMount } from 'svelte';
 <Router {routes}/>
 
 <style>
+  :global(*) {
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  font-family: inherit;
+}
+
+:global(html) {
+  font-size: 62.5%;
+}
   :global(.flex-box-column) {
     display: flex;
     flex-direction: column;

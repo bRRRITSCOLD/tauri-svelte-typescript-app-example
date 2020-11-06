@@ -2,6 +2,7 @@
   // noce_modules
   import type { join } from "lodash";
 import { createEventDispatcher } from "svelte";
+import App from "../../../App.svelte";
   const dispatch = createEventDispatcher();
 
   // props
@@ -259,20 +260,24 @@ import { createEventDispatcher } from "svelte";
             {#if column.cellComponent}
               <div
                 on:click={(event) => {
-                  column.onCellClick({
-                    rowIndex: i
-                  });
+                  if (column.onCellClick) {
+                    column.onCellClick({
+                      rowIndex: i
+                    });
+                  }
                 }}
                 on:dblclick={(event) => {
-                  column.onCellDoubleClick({
-                    rowIndex: i
-                  });
+                  if (column.onCellDoubleClick) {
+                    column.onCellDoubleClick({
+                      rowIndex: i
+                    });
+                  }
                 }}
               >
                 <svelte:component
                   this={column.cellComponent}
-                  {column}
-                  {row}
+                  {...column}
+                  {...row}
                 />
               </div>
             {:else}

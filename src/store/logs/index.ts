@@ -71,7 +71,7 @@ function createLogsStore() {
                   {
                     path: parsedReadLogAuditFile.path,
                     directory: logDirectory,
-                    logAuditFileId: uuid(),
+                    id: uuid(),
                     logFiles: parsedReadLogAuditFile.files.map((file: LogAuditFileLogFileInterface) => {
                       // first find the log audit file log file
                       // that correlates to each file returned
