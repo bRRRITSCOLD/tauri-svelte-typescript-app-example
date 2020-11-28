@@ -1,1 +1,1 @@
-# tauri-svelte-typescript-app-example
+# deprecated - unmaintained
